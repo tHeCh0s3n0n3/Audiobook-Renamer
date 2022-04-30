@@ -13,11 +13,30 @@
     <AssemblyVersion>1.0.0</AssemblyVersion>
     <FileVersion>1.0.0</FileVersion>
     <Description>A tool to rename Audiobooks and store them in directories condusive to library generation.</Description>
-    <Copyright>© TarekFadel.com</Copyright>
+    <Copyright>©2022 TarekFadel.com</Copyright>
+    <PackageProjectUrl>https://github.com/tHeCh0s3n0n3/Audiobook-Renamer</PackageProjectUrl>
+    <PackageIcon>Audiobook Renamer (512x512).png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/tHeCh0s3n0n3/Audiobook-Renamer</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>audiobook;tools;utilities;id3;mp3;rename</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Company>TarekFadel.com</Company>
   </PropertyGroup>
 
   <ItemGroup>
     <Content Include="Audiobook Renamer.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\Audiobook Renamer (512x512).png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
