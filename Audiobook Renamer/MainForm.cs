@@ -13,7 +13,7 @@ public partial class MainForm : Form
 
     private static Exception? _exception;
 
-    private static CancellationTokenSource? _cancellationTokenSource;
+    private static readonly CancellationTokenSource _cancellationTokenSource = new();
 
     private static int currentCount = 0;
     private static int totalCount = 0;
@@ -131,7 +131,7 @@ public partial class MainForm : Form
 
     private void BtnGetInfo_Click(object sender, EventArgs e)
     {
-        OpenFileDialog ofd = new()
+        using OpenFileDialog ofd = new()
         {
             Filter = "MP3 files (*.mp3)|*.mp3"
             , Multiselect = false
@@ -190,8 +190,8 @@ public partial class MainForm : Form
     private async void BtnMassRename_Click(object sender, EventArgs e)
     {
         string? basePath = SelectFolder("Select destination");
-        currentCount = 0;
-        totalCount = _audiobooks.Count;
+        _ = Interlocked.Exchange(ref currentCount, 0);
+        _ = Interlocked.Exchange(ref totalCount, _audiobooks.Count);
         tspbProgress.Step = 1;
         tspbProgress.Value = 0;
         tspbProgress.Maximum = totalCount;
@@ -201,10 +201,14 @@ public partial class MainForm : Form
         {
             return;
         }
-
-        _cancellationTokenSource = new();
         try
         {
+
+            if (!_cancellationTokenSource.TryReset())
+            {
+                throw new InvalidOperationException("Cannot reset cancellation token source");
+            }
+
             _vm.EnableMainControls = false;
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
             await Task.Run(() =>
@@ -222,11 +226,15 @@ public partial class MainForm : Form
                 throw _exception;
             }
         }
-        catch (IOException ioEx)
+        catch (OperationCanceledException)
+        {
+            tsslStatus.Text = "Canceled";
+        }
+        catch (Exception ex)
         {
             TaskDialog.ShowDialog(new TaskDialogPage()
                                   {
-                                      Text = ioEx.Message
+                                      Text = ex.Message
                                       , Caption = "Exception encountered"
                                       , Heading = "Exception!"
                                       , Buttons = new TaskDialogButtonCollection() { TaskDialogButton.OK }
@@ -237,14 +245,11 @@ public partial class MainForm : Form
                                   }
                                   , TaskDialogStartupLocation.CenterOwner);
         }
-        if (_cancellationTokenSource.IsCancellationRequested)
-        {
-            tsslStatus.Text = "Canceled";
-        }
-        else
-        {
-            tsslStatus.Text = "Ready!";
-        }
+
+        tsslStatus.Text = _cancellationTokenSource.IsCancellationRequested
+                          ? "Canceled"
+                          : "Ready!";
+
         tspbProgress.Visible = false;
         _vm.EnableMainControls = true;
     }
@@ -264,9 +269,18 @@ public partial class MainForm : Form
                 item.CreateDirectoryStructureAndCopyBook(basePath);
             }
         }
-        catch (Exception ioEx)
+        catch (Exception ex) when(
+            ex is ArgumentException
+            || ex is ArgumentNullException
+            || ex is System.Text.RegularExpressions.RegexMatchTimeoutException
+            || ex is IOException
+            || ex is UnauthorizedAccessException
+            || ex is PathTooLongException
+            || ex is DirectoryNotFoundException
+            || ex is FileNotFoundException
+            || ex is NotSupportedException)
         {
-            _exception = ioEx;
+            SetException(ex);
             _cancellationTokenSource.Cancel();
         }
     }
@@ -295,5 +309,10 @@ public partial class MainForm : Form
             _cancellationTokenSource.Cancel();
             btnCancel.Enabled = false;
         }
+    }
+
+    public static void SetException(Exception ex)
+    {
+        _exception = ex;
     }
 }

@@ -59,6 +59,19 @@ public class Audiobook
                              , string.Empty);
     }
 
+    /// <summary>
+    /// Creates a the directory structure and copes the book the new directory
+    /// </summary>
+    /// <param name="basePath">The base path where we want to create the book</param>
+    /// <exception cref="ArgumentException"></exception>
+    /// <exception cref="ArgumentNullException"></exception>
+    /// <exception cref="RegexMatchTimeoutException"></exception>
+    /// <exception cref="IOException"></exception>
+    /// <exception cref="UnauthorizedAccessException"></exception>
+    /// <exception cref="PathTooLongException"></exception>
+    /// <exception cref="DirectoryNotFoundException"></exception>
+    /// <exception cref="FileNotFoundException"></exception>
+    /// <exception cref="NotSupportedException"></exception>
     public void CreateDirectoryStructureAndCopyBook(string basePath)
     {
         string finalPath;
@@ -67,14 +80,13 @@ public class Audiobook
         {
             string strippedBookName = Regex.Replace(SafeTitle, SafeSeries, string.Empty).Trim();
             string bookDir;
-            if (!string.IsNullOrWhiteSpace(strippedBookName))
-            {
-                bookDir = $"Book {BookNumber} - {strippedBookName}";
-            }
-            else
-            { // The title of the book is probably the name as the series, keep the title as is.
-                bookDir = $"Book {BookNumber} - {SafeTitle}";
-            }
+
+            bookDir = !string.IsNullOrWhiteSpace(strippedBookName)
+                      ? $"Book {BookNumber} - {strippedBookName}"
+                      : $"Book {BookNumber} - {SafeTitle}"; // The title of the book is probably
+                                                            // the name as the series keep the
+                                                            // title as is.
+            
             finalPath = Path.Combine(new[] { basePath, SafeAuthor, SafeSeries, bookDir });
         }
         else

@@ -51,18 +51,10 @@ namespace ID3Helper
 
         public static List<Audiobook> ParseDirectory(string directory)
         {
-            List<Audiobook> result = new();
-
-            foreach(string? file in Directory.GetFiles(directory, "*.mp3"))
-            {
-                var audiobook = ParseID3Tags(file);
-                if (audiobook is not null)
-                {
-                    result.Add(audiobook);
-                }
-            }
-
-            return result;
+            return Directory.GetFiles(directory, "*.mp3")
+                            .Select(f => ParseID3Tags(f))
+                            .DiscardNullValues()
+                            .ToList();
         }
 
         public static void RenameMissingSeriesNumber(List<Audiobook> audiobooks)

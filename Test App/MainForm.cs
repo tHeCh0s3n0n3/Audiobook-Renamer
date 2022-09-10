@@ -11,7 +11,7 @@ public partial class MainForm : Form
 
     private void BtnGetInfo_Click(object sender, EventArgs e)
     {
-        OpenFileDialog ofd = new()
+        using OpenFileDialog ofd = new()
         {
             Filter = "MP3 files (*.mp3)|*.mp3"
             , Multiselect = false
