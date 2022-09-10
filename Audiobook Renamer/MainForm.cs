@@ -14,6 +14,7 @@ public partial class MainForm : Form
     private static Exception? _exception;
 
     private static readonly CancellationTokenSource _cancellationTokenSource = new();
+    private readonly ParallelOptions _parallelOptions = new ParallelOptions();
 
     private static int currentCount = 0;
     private static int totalCount = 0;
@@ -58,6 +59,8 @@ public partial class MainForm : Form
         txtSeriesName.DataBindings.Add("Text", _infoVM, nameof(_infoVM.SeriesName));
         txtBookNumber.DataBindings.Add("Text", _infoVM, nameof(_infoVM.BookNumber));
         txtJSON.DataBindings.Add("Text", _infoVM, nameof(_infoVM.JSON));
+
+        _parallelOptions.MaxDegreeOfParallelism = 5;
     }
 
     private void DgvBooks_SelectionChanged(object? sender, EventArgs e)
@@ -213,10 +216,7 @@ public partial class MainForm : Form
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
             await Task.Run(() =>
                 Parallel.ForEach(_audiobooks
-                                 , new ParallelOptions()
-                                 {
-                                     MaxDegreeOfParallelism = 5
-                                 }
+                                 , _parallelOptions
                                  , item => DoWork(basePath, item, cancellationToken))
                 , cancellationToken);
 
