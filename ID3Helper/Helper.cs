@@ -5,6 +5,12 @@ namespace ID3Helper
 {
     public static class Helper
     {
+        /// <summary>
+        /// Parses the ID3 tags of an audiobook and returns an <see cref="Audiobook"/> object if parsing
+        /// was successful
+        /// </summary>
+        /// <param name="filename">Full file path</param>
+        /// <returns><see cref="Audiobook"/> object if successful, <see langword="null"/> otherwise.</returns>
         public static Audiobook? ParseID3Tags(string filename)
         {
             try
@@ -49,6 +55,15 @@ namespace ID3Helper
             }
         }
 
+        /// <summary>
+        /// Get all mp3 files from a directory and parse the ID3 tags of
+        /// each one then return the resulting list.
+        /// </summary>
+        /// <param name="directory">Directory to parse</param>
+        /// <returns>List of <see cref="Audiobook"/> objects parsed from the directory.</returns>
+        /// <inheritdoc cref="System.IO.Directory.GetFiles" path="/exception"/>
+        /// <inheritdoc cref="System.Linq.Enumerable.Select" path="/exception"/>
+        /// <inheritdoc cref="System.Linq.Enumerable.ToList" path="/exception"/>
         public static List<Audiobook> ParseDirectory(string directory)
         {
             return Directory.GetFiles(directory, "*.mp3")
@@ -57,7 +72,15 @@ namespace ID3Helper
                             .ToList();
         }
 
-        public static void RenameMissingSeriesNumber(List<Audiobook> audiobooks)
+        /// <summary>
+        /// Renames files with missing series numbers in the ID3 tag to make
+        /// them easier to find.
+        /// </summary>
+        /// <param name="audiobooks">List of Audiobooks to rename.</param>
+        /// <inheritdoc cref="System.IO.File.Move" path="/exception"/>
+        /// <inheritdoc cref="System.Linq.Enumerable.Where" path="/exception"/>
+        /// <inheritdoc cref="System.Linq.Enumerable.AsEnumerable" path="/exception"/>
+        public static void RenameMissingSeriesNumber(ICollection<Audiobook> audiobooks)
         {
             var appendString = $"{DateTime.Now:yyyy-MM-dd_HHmmss}";
             foreach(Audiobook audiobook in audiobooks.Where(ab => !string.IsNullOrEmpty(ab.Series)

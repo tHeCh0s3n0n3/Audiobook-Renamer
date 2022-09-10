@@ -47,14 +47,20 @@ public class Audiobook
         BookNumber = bookNumber;
     }
 
-    private static string StripIllegalChars(string? str)
+    /// <summary>
+    /// Strips illegal filename characters from a string
+    /// </summary>
+    /// <param name="input">String to strip illegal characters from</param>
+    /// <returns>String without the illegal characters</returns>
+    /// <inheritdoc cref="Regex.Replace" path="/exception"/>
+    private static string StripIllegalChars(string? input)
     {
-        if (str is null)
+        if (input is null)
         {
             return string.Empty;
         }
 
-        return Regex.Replace(str
+        return Regex.Replace(input
                              , "[<,>,:,\",/,\\,|,?,*]"
                              , string.Empty);
     }
