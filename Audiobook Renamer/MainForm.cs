@@ -14,7 +14,7 @@ public partial class MainForm : Form
     private static Exception? _exception;
 
     private static readonly CancellationTokenSource _cancellationTokenSource = new();
-    private readonly ParallelOptions _parallelOptions = new ParallelOptions();
+    private readonly ParallelOptions _parallelOptions = new();
 
     private static int currentCount = 0;
     private static int totalCount = 0;
