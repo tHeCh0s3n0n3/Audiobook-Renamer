@@ -1,4 +1,5 @@
 using ID3Helper;
+using Audiobook_Renamer.ViewModels;
 
 namespace Audiobook_Renamer;
 
@@ -17,6 +18,10 @@ public partial class MainForm : Form
     private static int currentCount = 0;
     private static int totalCount = 0;
 
+    private readonly MainWindowViewModel _vm = new();
+    private readonly InfoViewModel _infoVM = new();
+
+
     public MainForm()
     {
         InitializeComponent();
@@ -27,6 +32,7 @@ public partial class MainForm : Form
         dgvBooks.Columns["SafeTitle"].Visible = false;
         dgvBooks.Columns["SafeAuthor"].Visible = false;
         dgvBooks.Columns["SafeSeries"].Visible = false;
+        dgvBooks.AllowUserToResizeRows = false;
 
         ssStatusBar.Padding = new Padding(ssStatusBar.Padding.Left
                                           , ssStatusBar.Padding.Top
@@ -34,6 +40,24 @@ public partial class MainForm : Form
                                           , ssStatusBar.Padding.Bottom);
         ssStatusBar.SizingGrip = false;
         ssStatusBar.GripStyle = ToolStripGripStyle.Hidden;
+
+        // Bind controls to the view model
+        btnParseDirectory.DataBindings.Add("Enabled", _vm, nameof(_vm.EnableMainControls));
+        btnCancel.DataBindings.Add("Enabled", _vm, nameof(_vm.EnableSecondaryControls));
+        btnCancel.DataBindings.Add("Visible", _vm, nameof(_vm.EnableSecondaryControls));
+        btnCancel.DataBindings.Add("UseWaitCursor", _vm, nameof(_vm.EnableMainControls));
+        btnMassRename.DataBindings.Add("Enabled", _vm, nameof(_vm.EnableMainControls));
+        btnRenameMissingBookNumbers.DataBindings.Add("Enabled", _vm, nameof(_vm.EnableMainControls));
+        btnGetInfo.DataBindings.Add("Enabled", _vm, nameof(_vm.EnableMainControls));
+        DataBindings.Add("UseWaitCursor", _vm, nameof(_vm.IndicateWorking));
+
+        // Bind info controls to the view model
+        txtFilename.DataBindings.Add("Text", _infoVM, nameof(_infoVM.Filename));
+        txtTitle.DataBindings.Add("Text", _infoVM, nameof(_infoVM.Title));
+        txtAuthor.DataBindings.Add("Text", _infoVM, nameof(_infoVM.Author));
+        txtSeriesName.DataBindings.Add("Text", _infoVM, nameof(_infoVM.SeriesName));
+        txtBookNumber.DataBindings.Add("Text", _infoVM, nameof(_infoVM.BookNumber));
+        txtJSON.DataBindings.Add("Text", _infoVM, nameof(_infoVM.JSON));
     }
 
     private void DgvBooks_SelectionChanged(object? sender, EventArgs e)
@@ -45,12 +69,12 @@ public partial class MainForm : Form
 
         if (dgvBooks.SelectedRows[0]?.DataBoundItem is Audiobook audiobook)
         {
-            txtFilename.Text = audiobook.Filename;
-            txtTitle.Text = audiobook.Title;
-            txtAuthor.Text = audiobook.Author;
-            txtSeriesName.Text = audiobook.Series;
-            txtBookNumber.Text = audiobook.BookNumber;
-            txtJSON.Text = audiobook.JSONRepresentation;
+            _infoVM.Filename = audiobook.Filename;
+            _infoVM.Title = audiobook.Title;
+            _infoVM.Author = audiobook.Author;
+            _infoVM.SeriesName = audiobook.Series;
+            _infoVM.BookNumber = audiobook.BookNumber;
+            _infoVM.JSON = audiobook.JSONRepresentation;
         }
     }
 
@@ -119,12 +143,12 @@ public partial class MainForm : Form
             return;
         }
 
-        txtFilename.Text = ofd.FileName;
-        txtTitle.Clear();
-        txtAuthor.Clear();
-        txtSeriesName.Clear();
-        txtBookNumber.Clear();
-        txtJSON.Clear();
+        _infoVM.Filename = ofd.FileName;
+        _infoVM.Title = string.Empty;
+        _infoVM.Author = string.Empty;
+        _infoVM.SeriesName = string.Empty;
+        _infoVM.BookNumber = string.Empty;
+        _infoVM.JSON = string.Empty;
 
         Audiobook? audiobook = ID3Helper.Helper.ParseID3Tags(ofd.FileName);
         if (audiobook is null)
@@ -132,11 +156,11 @@ public partial class MainForm : Form
             return;
         }
 
-        txtTitle.Text = audiobook.Title;
-        txtAuthor.Text = audiobook.Author;
-        txtSeriesName.Text = audiobook.Series;
-        txtBookNumber.Text = audiobook.BookNumber;
-        txtJSON.Text = audiobook.JSONRepresentation;
+        _infoVM.Title = audiobook.Title;
+        _infoVM.Author = audiobook.Author;
+        _infoVM.SeriesName = audiobook.Series;
+        _infoVM.BookNumber = audiobook.BookNumber;
+        _infoVM.JSON = audiobook.JSONRepresentation;
     }
 
     private void BtnParseDirectory_Click(object sender, EventArgs e)
@@ -181,7 +205,7 @@ public partial class MainForm : Form
         _cancellationTokenSource = new();
         try
         {
-            IndicateWorking();
+            _vm.EnableMainControls = false;
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
             await Task.Run(() =>
                 Parallel.ForEach(_audiobooks
@@ -217,22 +241,12 @@ public partial class MainForm : Form
         {
             tsslStatus.Text = "Canceled";
         }
-        tsslStatus.Text = "Ready!";
+        else
+        {
+            tsslStatus.Text = "Ready!";
+        }
         tspbProgress.Visible = false;
-        btnCancel.Visible = false;
-        IndicateWorking(false);
-    }
-
-    public void IndicateWorking(bool disableControls = true)
-    {
-        btnParseDirectory.Enabled = !disableControls;
-        btnCancel.Enabled = disableControls;
-        btnCancel.Visible = disableControls;
-        btnMassRename.Enabled = !disableControls;
-        btnRenameMissingBookNumbers.Enabled = !disableControls;
-        btnGetInfo.Enabled = !disableControls;
-        UseWaitCursor = disableControls;
-        btnCancel.UseWaitCursor = false;
+        _vm.EnableMainControls = true;
     }
 
     private void DoWork(string basePath, Audiobook item, CancellationToken cancellationToken)

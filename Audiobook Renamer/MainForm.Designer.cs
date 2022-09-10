@@ -64,7 +64,7 @@ partial class MainForm
             this.btnGetInfo.Location = new System.Drawing.Point(425, 12);
             this.btnGetInfo.Name = "btnGetInfo";
             this.btnGetInfo.Size = new System.Drawing.Size(150, 46);
-            this.btnGetInfo.TabIndex = 0;
+            this.btnGetInfo.TabIndex = 40;
             this.btnGetInfo.Text = "Get Info";
             this.btnGetInfo.UseVisualStyleBackColor = true;
             this.btnGetInfo.Click += new System.EventHandler(this.BtnGetInfo_Click);
@@ -86,7 +86,7 @@ partial class MainForm
             this.txtAuthor.Name = "txtAuthor";
             this.txtAuthor.ReadOnly = true;
             this.txtAuthor.Size = new System.Drawing.Size(461, 39);
-            this.txtAuthor.TabIndex = 2;
+            this.txtAuthor.TabIndex = 70;
             // 
             // label2
             // 
@@ -105,7 +105,7 @@ partial class MainForm
             this.txtSeriesName.Name = "txtSeriesName";
             this.txtSeriesName.ReadOnly = true;
             this.txtSeriesName.Size = new System.Drawing.Size(461, 39);
-            this.txtSeriesName.TabIndex = 2;
+            this.txtSeriesName.TabIndex = 80;
             // 
             // label3
             // 
@@ -124,7 +124,7 @@ partial class MainForm
             this.txtBookNumber.Name = "txtBookNumber";
             this.txtBookNumber.ReadOnly = true;
             this.txtBookNumber.Size = new System.Drawing.Size(461, 39);
-            this.txtBookNumber.TabIndex = 2;
+            this.txtBookNumber.TabIndex = 90;
             // 
             // label4
             // 
@@ -147,7 +147,7 @@ partial class MainForm
             this.txtJSON.ReadOnly = true;
             this.txtJSON.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtJSON.Size = new System.Drawing.Size(461, 367);
-            this.txtJSON.TabIndex = 2;
+            this.txtJSON.TabIndex = 100;
             // 
             // label5
             // 
@@ -166,7 +166,7 @@ partial class MainForm
             this.txtTitle.Name = "txtTitle";
             this.txtTitle.ReadOnly = true;
             this.txtTitle.Size = new System.Drawing.Size(461, 39);
-            this.txtTitle.TabIndex = 2;
+            this.txtTitle.TabIndex = 60;
             // 
             // label6
             // 
@@ -185,7 +185,7 @@ partial class MainForm
             this.txtFilename.Name = "txtFilename";
             this.txtFilename.ReadOnly = true;
             this.txtFilename.Size = new System.Drawing.Size(461, 39);
-            this.txtFilename.TabIndex = 2;
+            this.txtFilename.TabIndex = 50;
             // 
             // btnParseDirectory
             // 
@@ -193,7 +193,7 @@ partial class MainForm
             this.btnParseDirectory.Location = new System.Drawing.Point(606, 12);
             this.btnParseDirectory.Name = "btnParseDirectory";
             this.btnParseDirectory.Size = new System.Drawing.Size(222, 46);
-            this.btnParseDirectory.TabIndex = 0;
+            this.btnParseDirectory.TabIndex = 10;
             this.btnParseDirectory.Text = "Parse Directory";
             this.btnParseDirectory.UseVisualStyleBackColor = true;
             this.btnParseDirectory.Click += new System.EventHandler(this.BtnParseDirectory_Click);
@@ -227,7 +227,7 @@ partial class MainForm
             this.dgvBooks.RowTemplate.Height = 41;
             this.dgvBooks.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvBooks.Size = new System.Drawing.Size(1114, 540);
-            this.dgvBooks.TabIndex = 3;
+            this.dgvBooks.TabIndex = 30;
             this.dgvBooks.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.DgvBooks_ColumnHeaderMouseClick);
             this.dgvBooks.DataBindingComplete += new System.Windows.Forms.DataGridViewBindingCompleteEventHandler(this.DgvBooks_DataBindingComplete);
             this.dgvBooks.SelectionChanged += new System.EventHandler(this.DgvBooks_SelectionChanged);
@@ -239,7 +239,7 @@ partial class MainForm
             this.btnRenameMissingBookNumbers.Location = new System.Drawing.Point(1432, 610);
             this.btnRenameMissingBookNumbers.Name = "btnRenameMissingBookNumbers";
             this.btnRenameMissingBookNumbers.Size = new System.Drawing.Size(288, 46);
-            this.btnRenameMissingBookNumbers.TabIndex = 0;
+            this.btnRenameMissingBookNumbers.TabIndex = 110;
             this.btnRenameMissingBookNumbers.Text = "Rename Missing Book #";
             this.btnRenameMissingBookNumbers.UseVisualStyleBackColor = true;
             this.btnRenameMissingBookNumbers.Click += new System.EventHandler(this.BtnRenameMissingBookNumbers_Click);
@@ -251,7 +251,7 @@ partial class MainForm
             this.btnMassRename.Location = new System.Drawing.Point(1498, 12);
             this.btnMassRename.Name = "btnMassRename";
             this.btnMassRename.Size = new System.Drawing.Size(222, 46);
-            this.btnMassRename.TabIndex = 0;
+            this.btnMassRename.TabIndex = 20;
             this.btnMassRename.Text = "Mass Rename";
             this.btnMassRename.UseVisualStyleBackColor = true;
             this.btnMassRename.Click += new System.EventHandler(this.BtnMassRename_Click);
@@ -305,7 +305,7 @@ partial class MainForm
             this.btnCancel.Location = new System.Drawing.Point(1348, 12);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(144, 46);
-            this.btnCancel.TabIndex = 0;
+            this.btnCancel.TabIndex = 20;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Visible = false;
