@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace Test_App;
+namespace TestApp;
 
 public partial class MainForm : Form
 {
