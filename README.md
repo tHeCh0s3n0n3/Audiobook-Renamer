@@ -7,6 +7,10 @@ This tool _copies_ files to their new destination. You will need to remove the o
 * I don't want to be responsible for loss of data
 * If you use a tool to acquire your audiobooks which doesn't already do this, it probably expects the files to remain where it downloaded them to (or it will redownload them).
 
+## Front-ends
+* UI: Mainly used to preview the changes
+* CLI: For quick renaming of new files
+
 ## How to use
 1. Start the application
 2. Click on the "Parse Directory" button
