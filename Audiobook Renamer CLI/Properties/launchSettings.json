@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Audiobook Renamer CLI": {
+      "commandName": "Project",
+      "commandLineArgs": "-v D:\\Temp\\In\\ D:\\Temp\\Out\\"
+    }
+  }
+}
