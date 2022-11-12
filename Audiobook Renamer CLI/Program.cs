@@ -4,6 +4,7 @@ using ID3Helper;
 using Serilog;
 using Serilog.Configuration;
 using Serilog.Core;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 
 namespace AudiobookRenamerCLI;
@@ -61,7 +62,10 @@ public static class Program
         }
 
         SetupLogger(Arguments.Verbose, Arguments.Quiet);
-        
+
+        var assembly = Assembly.GetExecutingAssembly().GetName();
+        Log.Information($"{assembly.Name} - v{assembly.Version}");
+
         Log.Verbose("Options:");
         Log.Verbose("  Quiet: {0}", Arguments.Quiet);
         Log.Verbose("  Verbose: {0}", Arguments.Verbose);
