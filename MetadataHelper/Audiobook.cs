@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace ID3Helper;
+namespace MetadataHelper;
 
-public partial class Audiobook
+public sealed partial class Audiobook
 {
     public string Filename { get; set; }
 
@@ -91,7 +91,7 @@ public partial class Audiobook
                       : $"Book {BookNumber} - {SafeTitle}"; // The title of the book is probably
                                                             // the name as the series keep the
                                                             // title as is.
-            
+
             finalPath = Path.Combine(new[] { basePath, SafeAuthor, SafeSeries, bookDir });
         }
         else

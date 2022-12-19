@@ -6,8 +6,8 @@
     <RootNamespace>Audiobook_Renamer_CLI</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+    <AssemblyVersion>2.0.22353.1</AssemblyVersion>
+    <FileVersion>2.0.22353.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ID3Helper\ID3Helper.csproj" />
+    <ProjectReference Include="..\MetadataHelper\MetadataHelper.csproj" />
   </ItemGroup>
 
 </Project>

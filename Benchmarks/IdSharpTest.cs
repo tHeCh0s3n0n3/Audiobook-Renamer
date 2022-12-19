@@ -1,4 +1,4 @@
-﻿using ID3Helper;
+﻿using MetadataHelper;
 using IdSharp.Tagging.ID3v2;
 using System.Text;
 
@@ -50,10 +50,30 @@ public static class IdSharpTest
         }
     }
 
-    public static List<Audiobook> ParseDirectory(string directory)
+    public static List<Audiobook> ParseDirectory(string directory, MetadataHelper.Helper.FileTypes fileTypes)
     {
-        return Directory.GetFiles(directory, "*.mp3")
-                        .Select(f => ParseID3Tags(f))
+        if (fileTypes.HasFlag(MetadataHelper.Helper.FileTypes.MP3))
+        {
+            return GenericParseDirectory(directory, "*.mp3", ParseID3Tags);
+        }
+
+        if (fileTypes.HasFlag(MetadataHelper.Helper.FileTypes.M4A))
+        {
+            return GenericParseDirectory(directory, "*.m4a", ParseID3Tags);
+        }
+
+        if (fileTypes.HasFlag(MetadataHelper.Helper.FileTypes.M4B))
+        {
+            return GenericParseDirectory(directory, "*.m4b", ParseID3Tags);
+        }
+
+        return new();
+    }
+
+    private static List<Audiobook> GenericParseDirectory(string directory, string fileExtension, Func<string, Audiobook?> action)
+    {
+        return Directory.GetFiles(directory, fileExtension)
+                        .Select(f => action(f))
                         .DiscardNullValues()
                         .ToList();
     }

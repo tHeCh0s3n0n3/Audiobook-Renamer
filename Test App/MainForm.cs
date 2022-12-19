@@ -1,4 +1,4 @@
-using ID3Helper;
+using MetadataHelper;
 
 namespace TestApp;
 
@@ -13,9 +13,9 @@ public partial class MainForm : Form
     {
         using OpenFileDialog ofd = new()
         {
-            Filter = "MP3 files (*.mp3)|*.mp3|All Files (*.*)|*.*"
+            Filter = "All Audio Files (*.mp3,*.m4a,*.m4b)|*.mp3,*.m4a,*.m4b|MP3 files (*.mp3)|*.mp3|M4A files (*.m4a)|*.m4a|M4B files (*.m4b)|*.m4b|All Files (*.*)|*.*"
             , Multiselect = false
-            , Title = "Select MP3 file"
+            , Title = "Select Audio file"
         };
 
         if (ofd.ShowDialog() != DialogResult.OK)
@@ -30,7 +30,7 @@ public partial class MainForm : Form
         txtBookNumber.Clear();
         txtJSON.Clear();
 
-        Audiobook? audiobook = ID3Helper.Helper.ParseID3Tags(ofd.FileName);
+        Audiobook? audiobook = Helper.ParseFile(ofd.FileName);
         if (audiobook is null)
         {
             return;

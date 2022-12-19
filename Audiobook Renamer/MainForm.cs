@@ -1,4 +1,4 @@
-using ID3Helper;
+using MetadataHelper;
 using Audiobook_Renamer.ViewModels;
 using OpenFolder;
 
@@ -137,9 +137,9 @@ public partial class MainForm : Form
     {
         using OpenFileDialog ofd = new()
         {
-            Filter = "MP3 files (*.mp3)|*.mp3"
+            Filter = "All Audio Files (*.mp3,*.m4a,*.m4b)|*.mp3,*.m4a,*.m4b|MP3 files (*.mp3)|*.mp3|M4A files (*.m4a)|*.m4a|M4B files (*.m4b)|*.m4b"
             , Multiselect = false
-            , Title = "Select MP3 file"
+            , Title = "Select audio file"
         };
 
         if (ofd.ShowDialog() != DialogResult.OK)
@@ -154,7 +154,8 @@ public partial class MainForm : Form
         _infoVM.BookNumber = string.Empty;
         _infoVM.JSON = string.Empty;
 
-        Audiobook? audiobook = ID3Helper.Helper.ParseID3Tags(ofd.FileName);
+        Audiobook? audiobook = Helper.ParseFile(ofd.FileName);
+
         if (audiobook is null)
         {
             return;
@@ -169,7 +170,7 @@ public partial class MainForm : Form
 
     private void BtnParseDirectory_Click(object sender, EventArgs e)
     {
-        string? selectedDirectory = SelectFolder("Select MP3 directory");
+        string? selectedDirectory = SelectFolder("Select audio directory");
         if (selectedDirectory is null)
         {
             return;
@@ -181,7 +182,7 @@ public partial class MainForm : Form
 
     private void RefreshAudiobookList()
     {
-        _audiobooks = ID3Helper.Helper.ParseDirectory(_currentDirectory);
+        _audiobooks = Helper.ParseDirectory(_currentDirectory, Helper.FileTypes.MP3 | Helper.FileTypes.M4A | Helper.FileTypes.M4B);
         _bindingSource.DataSource = _audiobooks;
     }
 

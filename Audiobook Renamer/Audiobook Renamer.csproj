@@ -10,8 +10,8 @@
     <ApplicationIcon>Audiobook Renamer.ico</ApplicationIcon>
     <DebugType>embedded</DebugType>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <AssemblyVersion>1.1.2</AssemblyVersion>
-    <FileVersion>1.1.2</FileVersion>
+    <AssemblyVersion>2.0.22353.5</AssemblyVersion>
+    <FileVersion>2.0.22353.5</FileVersion>
     <Description>A tool to rename Audiobooks and store them in directories condusive to library generation.</Description>
     <Copyright>©2022 TarekFadel.com</Copyright>
     <PackageProjectUrl>https://github.com/tHeCh0s3n0n3/Audiobook-Renamer</PackageProjectUrl>
@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ID3Helper\ID3Helper.csproj" />
+    <ProjectReference Include="..\MetadataHelper\MetadataHelper.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,8 @@
 ﻿using Audiobook_Renamer_CLI;
 using CommandLine;
-using ID3Helper;
+using MetadataHelper;
 using Serilog;
-using Serilog.Configuration;
-using Serilog.Core;
 using System.Reflection;
-using System.Reflection.Metadata.Ecma335;
 
 namespace AudiobookRenamerCLI;
 
@@ -93,7 +90,7 @@ public static class Program
         }
 
         Log.Verbose("Parsing audiobooks from source directory");
-        _audiobooks = Helper.ParseDirectory(Arguments.SourceDir);
+        _audiobooks = Helper.ParseDirectory(Arguments.SourceDir, Helper.FileTypes.MP3);
         Log.Information("Found {0} audiobooks in {1}", _audiobooks.Count, Arguments.SourceDir);
 
         _ = Interlocked.Exchange(ref currentCount, 0);

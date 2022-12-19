@@ -1,11 +1,17 @@
 # Audiobook Renamer
 
 ## Introduction
-This tool is designed to make use of the ID3 tags of MP3 audiobook files to organize the files into a library.
+This tool is designed to make use of the metadata from audiobook files to organize the files into a library.
 
 This tool _copies_ files to their new destination. You will need to remove the old files by hand. This is intentional and serves 2 purposes:
 * I don't want to be responsible for loss of data
 * If you use a tool to acquire your audiobooks which doesn't already do this, it probably expects the files to remain where it downloaded them to (or it will redownload them).
+
+## Supported file types and their limitations
+* MP3
+  * No limitations
+* M4A/M4B
+  * Series Name/Title and Series Number may not populate
 
 ## Front-ends
 * UI: Mainly used to preview the changes

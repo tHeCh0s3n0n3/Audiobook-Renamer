@@ -5,8 +5,6 @@ VisualStudioVersion = 17.1.32414.318
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test App", "Test App\Test App.csproj", "{FA71FCCA-4BEA-4A92-BB59-99D800CDD202}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ID3Helper", "ID3Helper\ID3Helper.csproj", "{94384AEF-498F-4C17-83EF-F362E1E1FEB8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audiobook Renamer", "Audiobook Renamer\Audiobook Renamer.csproj", "{1295985C-B4B7-43FD-830E-C272F3C8C3F8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{497E5A6A-9DB4-4BCB-8276-6552B0820C0B}"
@@ -17,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Benchmarks\Benchmarks.csproj", "{AC734570-6AE8-4F79-B73A-604C0E7FCB7F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Audiobook Renamer CLI", "Audiobook Renamer CLI\Audiobook Renamer CLI.csproj", "{6E886E15-0A2C-4AF7-AE30-8E6430C222D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audiobook Renamer CLI", "Audiobook Renamer CLI\Audiobook Renamer CLI.csproj", "{6E886E15-0A2C-4AF7-AE30-8E6430C222D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetadataHelper", "MetadataHelper\MetadataHelper.csproj", "{6CA7D542-2ED5-469F-9E9F-268703C0043E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,6 @@ Global
 		{FA71FCCA-4BEA-4A92-BB59-99D800CDD202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FA71FCCA-4BEA-4A92-BB59-99D800CDD202}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FA71FCCA-4BEA-4A92-BB59-99D800CDD202}.Release|Any CPU.Build.0 = Release|Any CPU
-		{94384AEF-498F-4C17-83EF-F362E1E1FEB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{94384AEF-498F-4C17-83EF-F362E1E1FEB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{94384AEF-498F-4C17-83EF-F362E1E1FEB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{94384AEF-498F-4C17-83EF-F362E1E1FEB8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1295985C-B4B7-43FD-830E-C272F3C8C3F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1295985C-B4B7-43FD-830E-C272F3C8C3F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1295985C-B4B7-43FD-830E-C272F3C8C3F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +41,10 @@ Global
 		{6E886E15-0A2C-4AF7-AE30-8E6430C222D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E886E15-0A2C-4AF7-AE30-8E6430C222D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E886E15-0A2C-4AF7-AE30-8E6430C222D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CA7D542-2ED5-469F-9E9F-268703C0043E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA7D542-2ED5-469F-9E9F-268703C0043E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CA7D542-2ED5-469F-9E9F-268703C0043E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CA7D542-2ED5-469F-9E9F-268703C0043E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

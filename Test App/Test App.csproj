@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ID3Helper\ID3Helper.csproj" />
+    <ProjectReference Include="..\MetadataHelper\MetadataHelper.csproj" />
   </ItemGroup>
 
 </Project>
