@@ -55,7 +55,11 @@ public class Helper
 
             return new Audiobook(filename, utfJson, title, author, seriesName, bookNumber);
         }
-        catch
+        catch (Exception ex)
+        when (ex is ArgumentException
+              || ex is ArgumentNullException
+              || ex is DecoderFallbackException
+              || ex is FormatException)
         {
             return null;
         }
@@ -107,6 +111,18 @@ public class Helper
         return retval;
     }
 
+    /// <summary>
+    /// Parses a directory for specific file extensions and performs an actin on each file found
+    /// </summary>
+    /// <param name="directory">Directory to search</param>
+    /// <param name="fileExtension">File extension to filter for</param>
+    /// <param name="action">Action (function) to perform on each file found</param>
+    /// <returns>List of Audiobooks found and parsed</returns>
+    /// <inheritdoc cref="System.IO.Directory.GetFiles" path="/exception"/>/>
+    /// <inheritdoc cref="System.Linq.Enumerable.Where" path="/exception"/>/>
+    /// <inheritdoc cref="System.Linq.Enumerable.Select" path="/exception"/>/>
+    /// <inheritdoc cref="MetadataHelper.ExtensionMethods.DiscardNullValues" path="/exception"/>/>
+    /// <inheritdoc cref="System.Linq.Enumerable.ToList" path="/exception"/>/>
     private static List<Audiobook> GenericParseDirectory(string directory, string fileExtension, Func<string, Audiobook?> action)
     {
         return Directory.GetFiles(directory, fileExtension)

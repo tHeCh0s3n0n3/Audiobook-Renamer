@@ -40,7 +40,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    # Setup .NET6
+    # Setup .NET7
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
