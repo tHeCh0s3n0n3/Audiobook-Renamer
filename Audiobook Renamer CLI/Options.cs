@@ -11,11 +11,11 @@ public class Options
     private readonly string _sourceDir;
     private readonly string _destinationDir;
 
-    [Option('v', "verbose", Default = (bool)false, Required = false, HelpText = "See more output.", SetName = "Verbose")]
+    [Option('v', "verbose", Default = false, Required = false, HelpText = "See more output.", SetName = "Verbose")]
     public bool Verbose
         => _verbose;
 
-    [Option('q', "quiet", Default = (bool)false, Required = false, HelpText = "Do not show any output.", SetName = "Quiet")]
+    [Option('q', "quiet", Default = false, Required = false, HelpText = "Do not show any output.", SetName = "Quiet")]
     public bool Quiet
         => _quiet;
 

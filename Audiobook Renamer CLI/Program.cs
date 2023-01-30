@@ -42,10 +42,12 @@ public static class Program
 
         try
         {
-            _parserResult = new Parser(p => {
+            using Parser parser = new(p =>
+            {
                 p.CaseSensitive = false;
                 p.HelpWriter = Console.Error;
-            }).ParseArguments<Options>(args);
+            });
+            _parserResult = parser.ParseArguments<Options>(args);
         }
         catch (Exception ex)
         {
@@ -143,14 +145,9 @@ public static class Program
     private static void SetupLogger(bool verbose, bool quiet)
     {
         LoggerConfiguration logConfig = new();
-        if (verbose)
-        {
-            logConfig = logConfig.MinimumLevel.Verbose();
-        }
-        else
-        {
-            logConfig = logConfig.MinimumLevel.Information();
-        }
+        logConfig = (verbose
+                     ? logConfig.MinimumLevel.Verbose()
+                     : logConfig.MinimumLevel.Information());
 
         logConfig = logConfig.WriteTo
                              .File(@"Logs\.log"
