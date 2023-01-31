@@ -17,7 +17,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Benchmarks", "Benchmarks\Be
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Audiobook Renamer CLI", "Audiobook Renamer CLI\Audiobook Renamer CLI.csproj", "{6E886E15-0A2C-4AF7-AE30-8E6430C222D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetadataHelper", "MetadataHelper\MetadataHelper.csproj", "{6CA7D542-2ED5-469F-9E9F-268703C0043E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MetadataHelper", "MetadataHelper\MetadataHelper.csproj", "{6CA7D542-2ED5-469F-9E9F-268703C0043E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{BADA876C-3B43-4F95-8545-DD84271D89D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "codeql", "codeql", "{945AD081-A624-4430-A178-402B1D5DE2CA}"
+	ProjectSection(SolutionItems) = preProject
+		.github\codeql\codeql-config.yml = .github\codeql\codeql-config.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{9F633C15-B12F-42CF-852A-48E8F0BDB291}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\codeql-analysis.yml = .github\workflows\codeql-analysis.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +60,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BADA876C-3B43-4F95-8545-DD84271D89D3} = {497E5A6A-9DB4-4BCB-8276-6552B0820C0B}
+		{945AD081-A624-4430-A178-402B1D5DE2CA} = {BADA876C-3B43-4F95-8545-DD84271D89D3}
+		{9F633C15-B12F-42CF-852A-48E8F0BDB291} = {BADA876C-3B43-4F95-8545-DD84271D89D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EC6801CC-914D-4799-8D9A-F26AC99DE6BB}
