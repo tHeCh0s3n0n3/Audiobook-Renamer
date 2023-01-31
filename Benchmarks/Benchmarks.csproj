@@ -8,10 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.4" />
     <PackageReference Include="IdSharp.Tagging" Version="1.0.0-rc3" />
     <PackageReference Include="TagLibSharp" Version="2.3.0" />
-    <PackageReference Include="z440.atl.core" Version="4.16.0" />
+    <PackageReference Include="z440.atl.core" Version="4.18.0" />
   </ItemGroup>
 
   <ItemGroup>

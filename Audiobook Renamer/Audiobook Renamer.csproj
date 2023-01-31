@@ -41,7 +41,7 @@
 
   <ItemGroup>
     <PackageReference Include="com.tarekfadel.open_folder_library" Version="1.0.1" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
   </ItemGroup>
 
   <ItemGroup>
