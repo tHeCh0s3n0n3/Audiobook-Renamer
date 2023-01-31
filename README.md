@@ -1,4 +1,5 @@
 # Audiobook Renamer
+[![CodeQL](https://github.com/tHeCh0s3n0n3/Audiobook-Renamer/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/tHeCh0s3n0n3/Audiobook-Renamer/actions/workflows/codeql-analysis.yml)
 
 ## Introduction
 This tool is designed to make use of the metadata from audiobook files to organize the files into a library.
