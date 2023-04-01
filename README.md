@@ -50,5 +50,6 @@ The following functionality is also available:
   * Series Name
   * Book #
   * JSON representation (if available)
+  * Chapters
 * You can delete books which have a series name, but no book # 
   * Useful for when you have a tool which recently introduces the book # functionality
