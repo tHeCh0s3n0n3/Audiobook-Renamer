@@ -1,5 +1,4 @@
 ﻿using ATL;
-using IdSharp.Tagging.ID3v2;
 using MetadataHelper;
 using System.Text;
 
