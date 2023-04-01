@@ -1,5 +1,6 @@
 ﻿using MetadataHelper;
 using System.Text;
+using TagLib.Id3v2;
 
 namespace Benchmarks;
 
@@ -14,6 +15,7 @@ public static class TagLibSharpTest
             string? seriesName = null;
             string? bookNumber = null;
             string? utfJson = null;
+            List<AudiobookChapter> chapters = new();
 
             TagLib.File tagFile = TagLib.File.Create(filename);
 
@@ -28,11 +30,11 @@ public static class TagLibSharpTest
                     }
                     foreach (var id3Tag in id3Tags)
                     {
-                        var tif = id3Tag as TagLib.Id3v2.UserTextInformationFrame;
-                        if (tif is not null)
+                        var utif = id3Tag as TagLib.Id3v2.UserTextInformationFrame;
+                        if (utif is not null)
                         {
-                            string? desc = tif.Description;
-                            string[] tift = tif.Text;
+                            string? desc = utif.Description;
+                            string[] tift = utif.Text;
                             string? tiftStr = string.Join(", ", tift);
                             if (desc is not null
                                 && tiftStr is not null)
@@ -51,7 +53,7 @@ public static class TagLibSharpTest
                                 }
                                 if (desc.ToUpper().Equals("JSON64"))
                                 {
-                                    int encoding = tif.TextEncoding switch
+                                    int encoding = utif.TextEncoding switch
                                     {
                                         TagLib.StringType.Latin1 => 28591,
                                         TagLib.StringType.UTF16 => 1200,
@@ -65,6 +67,14 @@ public static class TagLibSharpTest
                                 }
                             }
                         }
+
+                        if (id3Tag is TagLib.Id3v2.ChapterFrame cif)
+                        {
+                            chapters.Add(new((cif.SubFrames.FirstOrDefault() as TextInformationFrame)?.Text.FirstOrDefault() ?? string.Empty
+                                             , TimeSpan.FromMilliseconds(cif.StartMilliseconds)
+                                             , TimeSpan.FromMilliseconds(cif.EndMilliseconds)
+                                             , TimeSpan.FromMilliseconds(cif.EndMilliseconds - cif.StartMilliseconds)));
+                        }
                     }
                 }
             }
@@ -74,7 +84,15 @@ public static class TagLibSharpTest
                 return null;
             }
 
-            return new Audiobook(filename, utfJson, title, author, seriesName, bookNumber);
+            return new Audiobook(filename
+                                 , utfJson
+                                 , title
+                                 , author
+                                 , seriesName
+                                 , bookNumber
+                                 , (chapters.Any()
+                                    ? chapters.OrderBy(c => c.Start).ToArray()
+                                    : null));
         }
         catch
         {

@@ -37,7 +37,26 @@ public class ATLTests
                 return null;
             }
 
-            return new Audiobook(filename, utfJson, title, author, seriesName, bookNumber);
+            IList<AudiobookChapter> chapters = new AudiobookChapter[track.Chapters.Count];
+
+            int i = 0;
+            foreach (var chapter in track.Chapters.OrderBy(c => c.UniqueID))
+            {
+                if (!chapter.UseOffset)
+                {
+                    chapters[i] = new(Title: chapter.Title
+                                     , Start: TimeSpan.FromMilliseconds(chapter.StartTime)
+                                     , End: TimeSpan.FromMilliseconds(chapter.EndTime)
+                                     , Duration: TimeSpan.FromMilliseconds(chapter.EndTime - chapter.StartTime));
+                }
+                else
+                {
+                    chapters[i] = new(chapter.Title);
+                }
+                i++;
+            }
+
+            return new Audiobook(filename, utfJson, title, author, seriesName, bookNumber, chapters);
         }
         catch
         {

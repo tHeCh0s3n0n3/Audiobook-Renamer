@@ -4,10 +4,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyVersion>1.1.23091.2</AssemblyVersion>
+    <FileVersion>1.1.23091.2</FileVersion>
+    <Version>1.1.23091.2</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="z440.atl.core" Version="4.18.0" />
+    <PackageReference Include="z440.atl.core" Version="4.27.0" />
   </ItemGroup>
 
 </Project>

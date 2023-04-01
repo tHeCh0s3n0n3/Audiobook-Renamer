@@ -25,19 +25,21 @@ public sealed partial class Audiobook
 
     public string? JSONRepresentation { get; set; }
 
+    public ICollection<AudiobookChapter>? Chapters { get; set; }
+
     public Audiobook(string filename)
-        : this(filename, null, string.Empty, string.Empty, null, null)
+        : this(filename, null, string.Empty, string.Empty, null, null, null)
     { }
 
     public Audiobook(string filename, string? json, string title, string author)
-        : this(filename, json, title, author, null, null)
+        : this(filename, json, title, author, null, null, null)
     { }
 
     public Audiobook(string filename, string? json, string title, string author, string series)
-        : this(filename, json, title, author, series, null)
+        : this(filename, json, title, author, series, null, null)
     { }
 
-    public Audiobook(string filename, string? json, string title, string author, string? series, string? bookNumber)
+    public Audiobook(string filename, string? json, string title, string author, string? series, string? bookNumber, ICollection<AudiobookChapter>? chapters)
     {
         Filename = filename;
         JSONRepresentation = json;
@@ -45,6 +47,7 @@ public sealed partial class Audiobook
         Author = author;
         Series = series;
         BookNumber = bookNumber;
+        Chapters = chapters;
     }
 
     /// <summary>
