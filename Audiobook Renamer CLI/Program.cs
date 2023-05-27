@@ -2,6 +2,8 @@
 using CommandLine;
 using MetadataHelper;
 using Serilog;
+using ShellProgressBar;
+using System.Collections.Concurrent;
 using System.Reflection;
 
 namespace AudiobookRenamerCLI;
@@ -29,9 +31,20 @@ public static class Program
 
     private static int currentCount = 0;
     private static int totalCount = 0;
+    private static int currentCopyCount = 0;
+    private static int totalCopyCount = 0;
+
+    private static readonly ConcurrentBag<BookToCopy> _filesToCopy = new();
+
+    private static readonly SemaphoreSlim _semaphoreSlim;
+
+    static Program()
+    {
+        _semaphoreSlim = new SemaphoreSlim(3);
+    }
 
     public static void Prepare()
-    {
+    {        
         _parallelOptions.MaxDegreeOfParallelism = 5;
     }
 
@@ -97,6 +110,7 @@ public static class Program
 
         _ = Interlocked.Exchange(ref currentCount, 0);
         _ = Interlocked.Exchange(ref totalCount, _audiobooks.Count);
+        _ = Interlocked.Exchange(ref currentCopyCount, 0);
 
         try
         {
@@ -105,17 +119,35 @@ public static class Program
                 throw new InvalidOperationException("Cannot reset cancellation token source");
             }
 
+            ProgressBar progressBar = new(100, "Copying Books");
+
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
             await Task.Run(() =>
                 Parallel.ForEach(_audiobooks
                                  , _parallelOptions
-                                 , item => DoWork(Arguments.DestinationDir, item, cancellationToken))
+                                 , item => DetermineFilesToCopy(Arguments.DestinationDir, item, progressBar, cancellationToken))
                 , cancellationToken);
 
             if (currentCount % 10 != 0)
             {
                 Log.Verbose("Processed {0}/{1}", currentCount, totalCount);
             }
+
+            //await Task.Run(() =>
+            //    Parallel.ForEach(_filesToCopy
+            //                     , _parallelOptions
+            //                     , item => Audiobook.CopyBookWithProgress(item, cancellationToken))
+            //    , cancellationToken);
+
+            _ = Interlocked.Exchange(ref totalCopyCount, _filesToCopy.Count);
+
+            List<Task> tasks = new();
+            foreach (var item in _filesToCopy)
+            {
+                tasks.Add(CopyBookWithProgress(item.SourceFile, item.DestinationFile, item.Progress, progressBar, cancellationToken));
+            }
+
+            await Task.WhenAll(tasks);
 
             if (cancellationToken.IsCancellationRequested
                 && _exception is not null)
@@ -160,7 +192,7 @@ public static class Program
         Log.Logger = logConfig.CreateLogger();
     }
 
-    private static void DoWork(string basePath, Audiobook item, CancellationToken cancellationToken)
+    private static void DetermineFilesToCopy(string basePath, Audiobook item, ProgressBar ppbar, CancellationToken cancellationToken)
     {
         if (_cancellationTokenSource is null) return;
 
@@ -174,7 +206,17 @@ public static class Program
         {
             if (!cancellationToken.IsCancellationRequested)
             {
-                item.CreateDirectoryStructureAndCopyBook(basePath);
+                string finalPath = item.CreateDirectoryStructure(basePath);
+                if (File.Exists(finalPath))
+                {
+                    return;
+                }
+
+                FileInfo sourceFile = new(item.Filename);
+                ChildProgressBar cpbar = ppbar.Spawn(100, sourceFile.Name);
+
+                BookToCopy newFileToCopy = new(new(item.Filename), new(finalPath), cpbar);
+                _filesToCopy.Add(newFileToCopy);
             }
         }
         catch (Exception ex) when (
@@ -196,5 +238,58 @@ public static class Program
     public static void SetException(Exception ex)
     {
         _exception = ex;
+    }
+
+    public static async Task CopyBookWithProgress(FileInfo sourceFile
+                                                  , FileInfo destinationFile
+                                                  , ChildProgressBar thisProgress
+                                                  , ProgressBar parentProgress
+                                                  , CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            await _semaphoreSlim.WaitAsync(cancellationToken);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return;
+            }
+
+            const int bufferSize = 1024 * 1024;
+            byte[] buffer = new byte[bufferSize];
+
+            using FileStream source = sourceFile.OpenRead();
+            using FileStream dest = destinationFile.OpenWrite();
+
+            long totalSize = sourceFile.Length;
+
+            dest.SetLength(source.Length);
+            int readBytes;
+            for (long size = 0; size < totalSize; size += readBytes)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    source.Close();
+                    dest.Close();
+                    destinationFile.Delete();
+                    return;
+                }
+
+                thisProgress.Tick(Convert.ToInt32(size * 100 / totalSize));
+                //Thread.Sleep(500);
+                readBytes = source.Read(buffer, 0, bufferSize);
+                await dest.WriteAsync(buffer.AsMemory(0, readBytes), cancellationToken);
+            }
+            source.Close();
+            await dest.FlushAsync(cancellationToken);
+            dest.Close();
+
+            thisProgress.Tick(Convert.ToInt32(totalSize * 100 / totalSize));
+        }
+        finally
+        {
+            Interlocked.Add(ref currentCopyCount, 1);
+            parentProgress.Tick(currentCopyCount * 100 / totalCopyCount);
+            _semaphoreSlim.Release();
+        }
     }
 }
