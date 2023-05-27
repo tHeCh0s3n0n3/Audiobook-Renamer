@@ -43,6 +43,9 @@ public class Options
             , new Example("Quiet as a mouse", new Options(false,true, @"C:\InDir\", @"C:\OutDir\"))
         };
 
+    /// <inheritdoc cref="object.ToString"/>
+    /// <inheritdoc cref="StringBuilder.AppendLine()" path="/exception"/>
+    /// <inheritdoc cref="StringBuilder.Append" path="/exception"/>
     public override string ToString()
     {
         StringBuilder sb = new();
