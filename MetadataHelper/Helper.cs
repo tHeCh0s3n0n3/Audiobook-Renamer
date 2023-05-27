@@ -18,6 +18,12 @@ public class Helper
     /// </summary>
     /// <param name="filename">Full file path</param>
     /// <returns><see cref="Audiobook"/> object if successful, <see langword="null"/> otherwise.</returns>
+    /// <inheritdoc cref="Dictionary{TKey, TValue}.TryGetValue(TKey, out TValue)" path="/exception"/>
+    /// <inheritdoc cref="Encoding.GetString(byte[])" path="/exception"/>
+    /// <inheritdoc cref="Convert.FromBase64String(string)" path="/exception"/>
+    /// <inheritdoc cref="System.Linq.IOrderedEnumerable.Order{T}(IEnumerable{T})" path="/exception"/>
+    /// <inheritdoc cref="TimeSpan.FromMilliseconds(double)" path="/exception"/>
+    /// <inheritdoc cref="System.Linq.Enumerable.Any{TSource}(IEnumerable{TSource})" path="/exception"/>
     public static Audiobook? ParseFile(string filename)
     {
         try
@@ -175,5 +181,4 @@ public class Helper
             File.Move(audiobook.Filename, $"{audiobook.Filename}{appendString}");
         }
     }
-
 }
