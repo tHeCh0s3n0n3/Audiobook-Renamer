@@ -64,23 +64,34 @@ public sealed partial class Audiobook
         }
 
         return IllegalCharactersRegex().Replace(input
-, string.Empty);
+                                                , string.Empty);
     }
 
     /// <summary>
     /// Creates a the directory structure and copes the book the new directory
     /// </summary>
     /// <param name="basePath">The base path where we want to create the book</param>
-    /// <exception cref="ArgumentException"></exception>
-    /// <exception cref="ArgumentNullException"></exception>
-    /// <exception cref="RegexMatchTimeoutException"></exception>
-    /// <exception cref="IOException"></exception>
-    /// <exception cref="UnauthorizedAccessException"></exception>
-    /// <exception cref="PathTooLongException"></exception>
-    /// <exception cref="DirectoryNotFoundException"></exception>
-    /// <exception cref="FileNotFoundException"></exception>
-    /// <exception cref="NotSupportedException"></exception>
+    /// <inheritdoc cref="CreateDirectoryStructure(string)" path="/exception "/>
+    /// <inheritdoc cref="File.Copy(string, string, bool)" path="/exception"/>
     public void CreateDirectoryStructureAndCopyBook(string basePath)
+    {
+        string finalFilename = CreateDirectoryStructure(basePath);
+        if (!File.Exists(finalFilename))
+        {
+            File.Copy(Filename, finalFilename, false);
+        }
+    }
+
+    /// <summary>
+    /// Creates the required directory structure and returns the final file path
+    /// </summary>
+    /// <param name="basePath">The base path where we want to create the book</param>
+    /// <returns>The full path where the book should be copied to</returns>
+    /// <inheritdoc cref="Regex.Replace(string, string, string)" path="/exception"/>
+    /// <inheritdoc cref="Path.Combine(string[])" path="/exception"/>
+    /// <inheritdoc cref="Path.GetFileName(string?)" path="/exception"/>
+    /// <inheritdoc cref="Directory.CreateDirectory(string)" path="/exception"/>
+    public string CreateDirectoryStructure(string basePath)
     {
         string finalPath;
         if (!string.IsNullOrEmpty(SafeSeries)
@@ -103,11 +114,7 @@ public sealed partial class Audiobook
         }
 
         Directory.CreateDirectory(finalPath);
-        string finalFilename = Path.Combine(finalPath, Path.GetFileName(Filename));
-        if (!File.Exists(finalFilename))
-        {
-            File.Copy(Filename, finalFilename, false);
-        }
+        return Path.Combine(finalPath, Path.GetFileName(Filename));
     }
 
     [GeneratedRegex("[<,>,:,\",/,\\,|,?,*]")]
