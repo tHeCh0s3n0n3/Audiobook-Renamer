@@ -6,8 +6,8 @@
     <RootNamespace>Audiobook_Renamer_CLI</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>2.0.22353.1</AssemblyVersion>
-    <FileVersion>2.0.22353.1</FileVersion>
+    <AssemblyVersion>2.1.23150.1</AssemblyVersion>
+    <FileVersion>2.1.23150.1</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
