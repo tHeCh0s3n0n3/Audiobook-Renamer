@@ -10,6 +10,7 @@ public class Options
     private readonly bool _quiet;
     private readonly string _sourceDir;
     private readonly string _destinationDir;
+    private readonly int _parallelCount;
 
     [Option('v', "verbose", Default = false, Required = false, HelpText = "See more output.", SetName = "Verbose")]
     public bool Verbose
@@ -27,20 +28,25 @@ public class Options
     public string DestinationDir
         => _destinationDir;
 
-    public Options(bool verbose, bool quiet, string sourceDir, string destinationDir)
+    [Value(5, MetaName = "Parallel Files", Required = false, HelpText = "Number of files to copy in parallel.")]
+    public int ParallelCount
+        => _parallelCount;
+
+    public Options(bool verbose, bool quiet, string sourceDir, string destinationDir, int parallelCount)
     {
         _verbose = verbose;
         _quiet = quiet;
         _sourceDir = sourceDir;
         _destinationDir = destinationDir;
+        _parallelCount = parallelCount;
     }
 
     [Usage]
     public static IEnumerable<Example> Examples
         => new List<Example>()
         {
-            new Example("Show max output", new Options(true, false, @"C:\InDir\", @"C:\OutDir\"))
-            , new Example("Quiet as a mouse", new Options(false,true, @"C:\InDir\", @"C:\OutDir\"))
+            new Example("Show max output", new Options(true, false, @"C:\InDir\", @"C:\OutDir\", 5))
+            , new Example("Quiet as a mouse", new Options(false,true, @"C:\InDir\", @"C:\OutDir\", 5))
         };
 
     /// <inheritdoc cref="object.ToString"/>
@@ -54,6 +60,7 @@ public class Options
         sb.Append("  Verbose: ").AppendLine(Verbose ? "true" : "false");
         sb.Append("       Source Directory: ").AppendLine(SourceDir);
         sb.Append("  Destination Directory: ").AppendLine(DestinationDir);
+        sb.Append("          Parallel Copy: ").AppendLine(ParallelCount.ToString());
 
         return sb.ToString();
     }

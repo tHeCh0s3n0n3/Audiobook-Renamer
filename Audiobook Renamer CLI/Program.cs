@@ -38,14 +38,52 @@ public static class Program
 
     private static readonly SemaphoreSlim _semaphoreSlim;
 
+    private static readonly Dictionary<string, ProgressBarBase> _progressBars;
+
     static Program()
     {
         _semaphoreSlim = new SemaphoreSlim(3);
+        
+        ProgressBarOptions progressBarOptions = ProgressBarOptions.Default;
+        progressBarOptions.ProgressBarOnBottom = true;
+        progressBarOptions.ShowEstimatedDuration = false;
+        progressBarOptions.EnableTaskBarProgress = true;
+        progressBarOptions.CollapseWhenFinished = false;
+
+        ProgressBarOptions childProgressBarOptions = progressBarOptions;
+        childProgressBarOptions.CollapseWhenFinished = true;
+
+        ProgressBar progressBar = new(200, "Processing...", progressBarOptions);
+
+        _progressBars = new()
+        {
+            { "Main",  progressBar},
+            { "Check", progressBar.Spawn(100, "Determining files to copy", childProgressBarOptions) },
+            { "Copy",  progressBar.Spawn(100, "Copying files", childProgressBarOptions)}
+        };
     }
 
     public static void Prepare()
     {        
         _parallelOptions.MaxDegreeOfParallelism = 5;
+    }
+
+    private static void SetupLogger(bool verbose, bool quiet)
+    {
+        LoggerConfiguration logConfig = new();
+        logConfig = (verbose
+                     ? logConfig.MinimumLevel.Verbose()
+                     : logConfig.MinimumLevel.Information());
+
+        logConfig = logConfig.WriteTo
+                             .File(@"Logs\.log"
+                                   , rollingInterval: RollingInterval.Day);
+        //if (!quiet)
+        //{
+        //    logConfig = logConfig.WriteTo.Console();
+        //}
+
+        Log.Logger = logConfig.CreateLogger();
     }
 
     [STAThread]
@@ -119,32 +157,18 @@ public static class Program
                 throw new InvalidOperationException("Cannot reset cancellation token source");
             }
 
-            ProgressBar progressBar = new(100, "Copying Books");
-
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
-            await Task.Run(() =>
-                Parallel.ForEach(_audiobooks
-                                 , _parallelOptions
-                                 , item => DetermineFilesToCopy(Arguments.DestinationDir, item, progressBar, cancellationToken))
-                , cancellationToken);
-
-            if (currentCount % 10 != 0)
+            foreach(Audiobook item in _audiobooks)
             {
-                Log.Verbose("Processed {0}/{1}", currentCount, totalCount);
+                DetermineFilesToCopy(Arguments.DestinationDir, item, cancellationToken);
             }
-
-            //await Task.Run(() =>
-            //    Parallel.ForEach(_filesToCopy
-            //                     , _parallelOptions
-            //                     , item => Audiobook.CopyBookWithProgress(item, cancellationToken))
-            //    , cancellationToken);
 
             _ = Interlocked.Exchange(ref totalCopyCount, _filesToCopy.Count);
 
             List<Task> tasks = new();
             foreach (var item in _filesToCopy)
             {
-                tasks.Add(CopyBookWithProgress(item.SourceFile, item.DestinationFile, item.Progress, progressBar, cancellationToken));
+                tasks.Add(CopyBookWithProgress(item.SourceFile, item.DestinationFile, item.Progress, cancellationToken));
             }
 
             await Task.WhenAll(tasks);
@@ -174,36 +198,14 @@ public static class Program
         return _retval | RETVAL_SUCCESS;
     }
 
-    private static void SetupLogger(bool verbose, bool quiet)
+    private static void DetermineFilesToCopy(string basePath
+                                             , Audiobook item
+                                             , CancellationToken cancellationToken)
     {
-        LoggerConfiguration logConfig = new();
-        logConfig = (verbose
-                     ? logConfig.MinimumLevel.Verbose()
-                     : logConfig.MinimumLevel.Information());
-
-        logConfig = logConfig.WriteTo
-                             .File(@"Logs\.log"
-                                   , rollingInterval: RollingInterval.Day);
-        if (!quiet)
-        {
-            logConfig = logConfig.WriteTo.Console();
-        }
-
-        Log.Logger = logConfig.CreateLogger();
-    }
-
-    private static void DetermineFilesToCopy(string basePath, Audiobook item, ProgressBar ppbar, CancellationToken cancellationToken)
-    {
-        if (_cancellationTokenSource is null) return;
-
-        Interlocked.Increment(ref currentCount);
-        if (currentCount % 10 == 0)
-        {
-            Log.Verbose("Processed {0}/{1}", currentCount, totalCount);
-        }
-
         try
         {
+            if (_cancellationTokenSource is null) return;
+
             if (!cancellationToken.IsCancellationRequested)
             {
                 string finalPath = item.CreateDirectoryStructure(basePath);
@@ -213,7 +215,7 @@ public static class Program
                 }
 
                 FileInfo sourceFile = new(item.Filename);
-                ChildProgressBar cpbar = ppbar.Spawn(100, sourceFile.Name);
+                ChildProgressBar cpbar = _progressBars["Copy"].Spawn(100, sourceFile.Name);
 
                 BookToCopy newFileToCopy = new(new(item.Filename), new(finalPath), cpbar);
                 _filesToCopy.Add(newFileToCopy);
@@ -233,6 +235,12 @@ public static class Program
             SetException(ex);
             _cancellationTokenSource.Cancel();
         }
+        finally
+        {
+            Interlocked.Increment(ref currentCount);
+            _progressBars["Check"].Tick(currentCount * 100 / totalCount);
+            _progressBars["Main"].Tick(currentCount * 100 / totalCount);
+        }
     }
 
     public static void SetException(Exception ex)
@@ -243,7 +251,6 @@ public static class Program
     public static async Task CopyBookWithProgress(FileInfo sourceFile
                                                   , FileInfo destinationFile
                                                   , ChildProgressBar thisProgress
-                                                  , ProgressBar parentProgress
                                                   , CancellationToken cancellationToken = default)
     {
         try
@@ -275,7 +282,6 @@ public static class Program
                 }
 
                 thisProgress.Tick(Convert.ToInt32(size * 100 / totalSize));
-                //Thread.Sleep(500);
                 readBytes = source.Read(buffer, 0, bufferSize);
                 await dest.WriteAsync(buffer.AsMemory(0, readBytes), cancellationToken);
             }
@@ -288,7 +294,8 @@ public static class Program
         finally
         {
             Interlocked.Add(ref currentCopyCount, 1);
-            parentProgress.Tick(currentCopyCount * 100 / totalCopyCount);
+            _progressBars["Copy"].Tick(currentCopyCount * 100 / totalCopyCount);
+            _progressBars["Main"].Tick(_progressBars["Copy"].CurrentTick + _progressBars["Check"].CurrentTick);
             _semaphoreSlim.Release();
         }
     }
