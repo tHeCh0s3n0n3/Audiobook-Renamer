@@ -43,11 +43,11 @@ public static class Program
     static Program()
     {
         _semaphoreSlim = new SemaphoreSlim(3);
-        
+
         ProgressBarOptions progressBarOptions = ProgressBarOptions.Default;
         progressBarOptions.ProgressBarOnBottom = true;
         progressBarOptions.ShowEstimatedDuration = false;
-        progressBarOptions.EnableTaskBarProgress = true;
+        progressBarOptions.EnableTaskBarProgress = System.OperatingSystem.IsWindows();
         progressBarOptions.CollapseWhenFinished = false;
 
         ProgressBarOptions childProgressBarOptions = progressBarOptions;
