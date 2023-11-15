@@ -6,8 +6,8 @@
     <RootNamespace>Audiobook_Renamer_CLI</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyVersion>2.1.23319.1</AssemblyVersion>
-    <FileVersion>2.1.23319.1</FileVersion>
+    <AssemblyVersion>2.1.23319.2</AssemblyVersion>
+    <FileVersion>2.1.23319.2</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

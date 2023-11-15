@@ -76,7 +76,9 @@ public static class Program
                      : logConfig.MinimumLevel.Information());
 
         logConfig = logConfig.WriteTo
-                             .File(@"Logs\.log"
+                             .File(System.OperatingSystem.IsWindows()
+                                   ? @"Logs\.log"
+                                   : "Logs/.log"
                                    , rollingInterval: RollingInterval.Day);
         //if (!quiet)
         //{
