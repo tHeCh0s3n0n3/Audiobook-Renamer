@@ -4,13 +4,17 @@ using System.Text;
 
 namespace Audiobook_Renamer_CLI;
 
-public class Options
+public class Options(bool verbose
+                     , bool quiet
+                     , string sourceDir
+                     , string destinationDir
+                     , int parallelCount)
 {
-    private readonly bool _verbose;
-    private readonly bool _quiet;
-    private readonly string _sourceDir;
-    private readonly string _destinationDir;
-    private readonly int _parallelCount;
+    private readonly bool _verbose = verbose;
+    private readonly bool _quiet = quiet;
+    private readonly string _sourceDir = sourceDir;
+    private readonly string _destinationDir = destinationDir;
+    private readonly int _parallelCount = parallelCount;
 
     [Option('v', "verbose", Default = false, Required = false, HelpText = "See more output.", SetName = "Verbose")]
     public bool Verbose
@@ -32,21 +36,12 @@ public class Options
     public int ParallelCount
         => _parallelCount;
 
-    public Options(bool verbose, bool quiet, string sourceDir, string destinationDir, int parallelCount)
-    {
-        _verbose = verbose;
-        _quiet = quiet;
-        _sourceDir = sourceDir;
-        _destinationDir = destinationDir;
-        _parallelCount = parallelCount;
-    }
-
     [Usage]
     public static IEnumerable<Example> Examples
         => new List<Example>()
         {
-            new Example("Show max output", new Options(true, false, @"C:\InDir\", @"C:\OutDir\", 5))
-            , new Example("Quiet as a mouse", new Options(false,true, @"C:\InDir\", @"C:\OutDir\", 5))
+            new("Show max output", new Options(true, false, @"C:\InDir\", @"C:\OutDir\", 5))
+            , new("Quiet as a mouse", new Options(false,true, @"C:\InDir\", @"C:\OutDir\", 5))
         };
 
     /// <inheritdoc cref="object.ToString"/>

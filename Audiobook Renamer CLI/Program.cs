@@ -22,7 +22,7 @@ public static class Program
     private static Options? Arguments =>
         _parserResult?.Value;
 
-    private static List<Audiobook> _audiobooks = new();
+    private static List<Audiobook> _audiobooks = [];
 
     private static readonly CancellationTokenSource _cancellationTokenSource = new();
     private static readonly ParallelOptions _parallelOptions = new();
@@ -34,7 +34,7 @@ public static class Program
     private static int currentCopyCount = 0;
     private static int totalCopyCount = 0;
 
-    private static readonly ConcurrentBag<BookToCopy> _filesToCopy = new();
+    private static readonly ConcurrentBag<BookToCopy> _filesToCopy = [];
 
     private static readonly SemaphoreSlim _semaphoreSlim;
 
@@ -167,7 +167,7 @@ public static class Program
 
             _ = Interlocked.Exchange(ref totalCopyCount, _filesToCopy.Count);
 
-            List<Task> tasks = new();
+            List<Task> tasks = [];
             foreach (var item in _filesToCopy)
             {
                 tasks.Add(CopyBookWithProgress(item.SourceFile, item.DestinationFile, item.Progress, cancellationToken));
