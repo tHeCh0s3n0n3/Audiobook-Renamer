@@ -109,13 +109,13 @@ public class Helper
     /// <inheritdoc cref="System.Linq.Enumerable.ToList" path="/exception"/>
     public static List<Audiobook> ParseDirectory(string directory, FileTypes fileTypes)
     {
-        List<Audiobook> retval = new();
+        List<Audiobook> retval = [];
 
         if (fileTypes.HasFlag(FileTypes.MP3))
         {
             List<Audiobook> mp3Files = GenericParseDirectory(directory, "*.mp3", ParseFile);
 
-            if (mp3Files.Any())
+            if (mp3Files.Count != 0)
             {
                 retval.AddRange(mp3Files);
             }
@@ -125,7 +125,7 @@ public class Helper
         {
             List<Audiobook> m4aFiles = GenericParseDirectory(directory, "*.m4a", ParseFile);
             
-            if (m4aFiles.Any())
+            if (m4aFiles.Count != 0)
             {
                 retval.AddRange(m4aFiles);
             }
@@ -135,7 +135,7 @@ public class Helper
         {
             List<Audiobook> m4bFiles = GenericParseDirectory(directory, "*.m4b", ParseFile);
 
-            if (m4bFiles.Any())
+            if (m4bFiles.Count != 0)
             {
                 retval.AddRange(m4bFiles);
             }

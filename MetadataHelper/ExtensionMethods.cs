@@ -11,9 +11,7 @@ public static class ExtensionMethods
     {
         foreach (T? item in enumerable.Where(i => i is not null))
         {
-#pragma warning disable CS8603 // Possible null reference return.
-            yield return item;
-#pragma warning restore CS8603 // Possible null reference return.
+            yield return item!;
         }
     }
 }

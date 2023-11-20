@@ -106,11 +106,11 @@ public sealed partial class Audiobook
                                                             // the name as the series keep the
                                                             // title as is.
 
-            finalPath = Path.Combine(new[] { basePath, SafeAuthor, SafeSeries, bookDir });
+            finalPath = Path.Combine([basePath, SafeAuthor, SafeSeries, bookDir]);
         }
         else
         {
-            finalPath = Path.Combine(new[] { basePath, Author, SafeTitle });
+            finalPath = Path.Combine([basePath, Author, SafeTitle]);
         }
 
         Directory.CreateDirectory(finalPath);
