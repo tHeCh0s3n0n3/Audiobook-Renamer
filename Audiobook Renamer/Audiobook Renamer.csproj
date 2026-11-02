@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows7.0</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <RootNamespace>Audiobook_Renamer</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
@@ -10,8 +10,8 @@
     <ApplicationIcon>Audiobook Renamer.ico</ApplicationIcon>
     <DebugType>embedded</DebugType>
     <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
-    <AssemblyVersion>2.0.22353.5</AssemblyVersion>
-    <FileVersion>2.0.22353.5</FileVersion>
+    <AssemblyVersion>2.1.26306.1</AssemblyVersion>
+    <FileVersion>2.1.26306.1</FileVersion>
     <Description>A tool to rename Audiobooks and store them in directories condusive to library generation.</Description>
     <Copyright>©2022 TarekFadel.com</Copyright>
     <PackageProjectUrl>https://github.com/tHeCh0s3n0n3/Audiobook-Renamer</PackageProjectUrl>
@@ -41,7 +41,7 @@
 
   <ItemGroup>
     <PackageReference Include="com.tarekfadel.open_folder_library" Version="1.0.1" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.1.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
   </ItemGroup>
 
   <ItemGroup>
