@@ -29,11 +29,16 @@ public partial class MainForm : Form
         InitializeComponent();
         _bindingSource.DataSource = _audiobooks;
         dgvBooks.DataSource = _bindingSource;
-        dgvBooks.Columns["BookNumber"].HeaderText = "Book #";
-        dgvBooks.Columns["JSONRepresentation"].Visible = false;
-        dgvBooks.Columns["SafeTitle"].Visible = false;
-        dgvBooks.Columns["SafeAuthor"].Visible = false;
-        dgvBooks.Columns["SafeSeries"].Visible = false;
+        (dgvBooks.Columns["BookNumber"] ?? throw new KeyNotFoundException("BookNUmber column not found."))
+            .HeaderText = "Book #";
+        (dgvBooks.Columns["JSONRepresentation"] ?? throw new KeyNotFoundException("JSONRepresentation column not found."))
+            .Visible = false;
+        (dgvBooks.Columns["SafeTitle"] ?? throw new KeyNotFoundException("SafeTitle column not found."))
+            .Visible = false;
+        (dgvBooks.Columns["SafeAuthor"] ?? throw new KeyNotFoundException("SafeAuthor column not found."))
+            .Visible = false;
+        (dgvBooks.Columns["SafeSeries"] ?? throw new KeyNotFoundException("SafeSeries column not found."))
+            .Visible = false;
         dgvBooks.AllowUserToResizeRows = false;
 
         ssStatusBar.Padding = new Padding(ssStatusBar.Padding.Left
@@ -110,7 +115,8 @@ public partial class MainForm : Form
         if (newSortOrder == SortOrder.None)
         {
             _bindingSource.DataSource = _audiobooks;
-            dgvBooks.Columns[column.Name].HeaderCell.SortGlyphDirection = newSortOrder;
+            (dgvBooks.Columns[column.Name] ?? throw new KeyNotFoundException($"{column.Name} column not found."))
+                .HeaderCell.SortGlyphDirection = newSortOrder;
             return;
         }
 
@@ -129,7 +135,8 @@ public partial class MainForm : Form
         }        
         
         _bindingSource.DataSource = sortedList;
-        dgvBooks.Columns[column.Name].HeaderCell.SortGlyphDirection = newSortOrder;
+        (dgvBooks.Columns[column.Name] ?? throw new KeyNotFoundException($"{column.Name} column not found."))
+            .HeaderCell.SortGlyphDirection = newSortOrder;
         return;
     }
 
