@@ -160,9 +160,22 @@ public static class Program
             }
 
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
-            foreach(Audiobook item in _audiobooks)
+
+            Log.Information("Books to copy (Author | Series | Title): ");
+            foreach (Audiobook item in _audiobooks)
             {
-                DetermineFilesToCopy(Arguments.DestinationDir, item, cancellationToken);
+                if (DetermineFilesToCopy(Arguments.DestinationDir, item, cancellationToken))
+                {
+                    Log.Information("  {author} | {series} | {title}"
+                                    , item.SafeAuthor
+                                    , (!string.IsNullOrEmpty(item.SafeSeries) ? item.SafeSeries : "NO-SERIES")
+                                    , item.SafeTitle);
+                }
+            }
+
+            if (_filesToCopy.IsEmpty)
+            {
+                Log.Information("--NONE--");
             }
 
             _ = Interlocked.Exchange(ref totalCopyCount, _filesToCopy.Count);
@@ -195,25 +208,30 @@ public static class Program
             Log.Fatal(ex, "General Exception: ");
             return _retval | RETVAL_ERROR_GENERAL;
         }
+        finally
+        {
+            // Add a newline to provide a fresh line for the console promt.
+            Console.WriteLine("");
+        }
 
         Log.Information("Done");
         return _retval | RETVAL_SUCCESS;
     }
 
-    private static void DetermineFilesToCopy(string basePath
+    private static bool DetermineFilesToCopy(string basePath
                                              , Audiobook item
                                              , CancellationToken cancellationToken)
     {
         try
         {
-            if (_cancellationTokenSource is null) return;
+            if (_cancellationTokenSource is null) return false;
 
             if (!cancellationToken.IsCancellationRequested)
             {
                 string finalPath = item.CreateDirectoryStructure(basePath);
                 if (File.Exists(finalPath))
                 {
-                    return;
+                    return false;
                 }
 
                 FileInfo sourceFile = new(item.Filename);
@@ -222,6 +240,8 @@ public static class Program
                 BookToCopy newFileToCopy = new(new(item.Filename), new(finalPath), cpbar);
                 _filesToCopy.Add(newFileToCopy);
             }
+
+            return true;
         }
         catch (Exception ex) when (
             ex is ArgumentException
@@ -236,6 +256,7 @@ public static class Program
         {
             SetException(ex);
             _cancellationTokenSource.Cancel();
+            return false;
         }
         finally
         {
