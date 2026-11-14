@@ -37,22 +37,17 @@ public class ATLTests
                 return null;
             }
 
-            IList<AudiobookChapter> chapters = new AudiobookChapter[track.Chapters.Count];
+            AudiobookChapter[] chapters = new AudiobookChapter[track.Chapters.Count];
 
             int i = 0;
             foreach (var chapter in track.Chapters.OrderBy(c => c.UniqueID))
             {
-                if (!chapter.UseOffset)
-                {
-                    chapters[i] = new(Title: chapter.Title
-                                     , Start: TimeSpan.FromMilliseconds(chapter.StartTime)
-                                     , End: TimeSpan.FromMilliseconds(chapter.EndTime)
-                                     , Duration: TimeSpan.FromMilliseconds(chapter.EndTime - chapter.StartTime));
-                }
-                else
-                {
-                    chapters[i] = new(chapter.Title);
-                }
+                chapters[i] = !chapter.UseOffset
+                              ? new(Title: chapter.Title
+                                    , Start: TimeSpan.FromMilliseconds(chapter.StartTime)
+                                    , End: TimeSpan.FromMilliseconds(chapter.EndTime)
+                                    , Duration: TimeSpan.FromMilliseconds(chapter.EndTime - chapter.StartTime))
+                              : new(chapter.Title);
                 i++;
             }
 
@@ -81,14 +76,13 @@ public class ATLTests
             return GenericParseDirectory(directory, "*.m4b", ParseFile);
         }
 
-        return new();
+        return [];
     }
 
     private static List<Audiobook> GenericParseDirectory(string directory, string fileExtension, Func<string, Audiobook?> action)
     {
-        return Directory.GetFiles(directory, fileExtension)
-                        .Select(f => action(f))
-                        .DiscardNullValues()
-                        .ToList();
+        return [.. Directory.GetFiles(directory, fileExtension)
+                            .Select(f => action(f))
+                            .DiscardNullValues()];
     }
 }

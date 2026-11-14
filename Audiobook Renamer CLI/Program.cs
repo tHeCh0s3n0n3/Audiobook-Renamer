@@ -1,12 +1,13 @@
-﻿using Audiobook_Renamer_CLI;
-using CommandLine;
+﻿using CommandLine;
 using MetadataHelper;
 using Serilog;
 using ShellProgressBar;
 using System.Collections.Concurrent;
 using System.Reflection;
 
+#pragma warning disable IDE0130 // Namespace does not match folder structure
 namespace AudiobookRenamerCLI;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 public static class Program
 {
@@ -73,7 +74,9 @@ public static class Program
         LoggerConfiguration logConfig = new();
         logConfig = (verbose
                      ? logConfig.MinimumLevel.Verbose()
-                     : logConfig.MinimumLevel.Information());
+                     : (quiet
+                        ? logConfig.MinimumLevel.Error()
+                        : logConfig.MinimumLevel.Information()));
 
         logConfig = logConfig.WriteTo
                              .File(System.OperatingSystem.IsWindows()
@@ -162,15 +165,12 @@ public static class Program
             CancellationToken cancellationToken = _cancellationTokenSource.Token;
 
             Log.Information("Books to copy (Author | Series | Title): ");
-            foreach (Audiobook item in _audiobooks)
+            foreach (Audiobook item in _audiobooks.Where(item => DetermineFilesToCopy(Arguments.DestinationDir, item, cancellationToken)))
             {
-                if (DetermineFilesToCopy(Arguments.DestinationDir, item, cancellationToken))
-                {
-                    Log.Information("  {author} | {series} | {title}"
-                                    , item.SafeAuthor
-                                    , (!string.IsNullOrEmpty(item.SafeSeries) ? item.SafeSeries : "NO-SERIES")
-                                    , item.SafeTitle);
-                }
+                Log.Information("  {author} | {series} | {title}"
+                                , item.SafeAuthor
+                                , (!string.IsNullOrEmpty(item.SafeSeries) ? item.SafeSeries : "NO-SERIES")
+                                , item.SafeTitle);
             }
 
             if (_filesToCopy.IsEmpty)

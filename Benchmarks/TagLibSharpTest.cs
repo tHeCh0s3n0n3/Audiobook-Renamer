@@ -15,12 +15,12 @@ public static class TagLibSharpTest
             string? seriesName = null;
             string? bookNumber = null;
             string? utfJson = null;
-            List<AudiobookChapter> chapters = new();
+            List<AudiobookChapter> chapters = [];
 
             TagLib.File tagFile = TagLib.File.Create(filename);
 
             title = tagFile.Tag.Title;
-            foreach (TagLib.Tag tagContainer in (tagFile.Tag as TagLib.NonContainer.Tag)?.Tags ?? Array.Empty<TagLib.Tag>())
+            foreach (TagLib.Tag tagContainer in (tagFile.Tag as TagLib.NonContainer.Tag)?.Tags ?? [])
             {
                 if (tagContainer.TagTypes == TagLib.TagTypes.Id3v2)
                 {
@@ -90,7 +90,7 @@ public static class TagLibSharpTest
                                  , author
                                  , seriesName
                                  , bookNumber
-                                 , (chapters.Any()
+                                 , (chapters.Count != 0
                                     ? chapters.OrderBy(c => c.Start).ToArray()
                                     : null));
         }
@@ -117,14 +117,13 @@ public static class TagLibSharpTest
             return GenericParseDirectory(directory, "*.m4b", ParseID3Tags);
         }
 
-        return new();
+        return [];
     }
 
     private static List<Audiobook> GenericParseDirectory(string directory, string fileExtension, Func<string, Audiobook?> action)
     {
-        return Directory.GetFiles(directory, fileExtension)
+        return [.. Directory.GetFiles(directory, fileExtension)
                         .Select(f => action(f))
-                        .DiscardNullValues()
-                        .ToList();
+                        .DiscardNullValues()];
     }
 }

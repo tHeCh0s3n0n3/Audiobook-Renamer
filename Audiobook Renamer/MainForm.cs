@@ -6,9 +6,9 @@ namespace Audiobook_Renamer;
 
 public partial class MainForm : Form
 {
-    private readonly BindingSource _bindingSource = new();
+    private readonly BindingSource _bindingSource = [];
 
-    private List<Audiobook> _audiobooks = new();
+    private List<Audiobook> _audiobooks = [];
 
     private string _currentDirectory = string.Empty;
 
@@ -122,10 +122,10 @@ public partial class MainForm : Form
 
         List<Audiobook> sortedList = column.Name switch
         {
-            "Title" => _audiobooks.OrderBy(ab => ab.Title).ToList(),
-            "Author" => _audiobooks.OrderBy(ab => ab.Author).ToList(),
-            "Series" => _audiobooks.OrderBy(ab => ab.Series).ToList(),
-            "BookNumber" => _audiobooks.OrderBy(ab => ab.BookNumber).ToList(),
+            "Title" => [.. _audiobooks.OrderBy(ab => ab.Title)],
+            "Author" => [.. _audiobooks.OrderBy(ab => ab.Author)],
+            "Series" => [.. _audiobooks.OrderBy(ab => ab.Series)],
+            "BookNumber" => [.. _audiobooks.OrderBy(ab => ab.BookNumber)],
             _ => _audiobooks
         };
 
@@ -246,7 +246,7 @@ public partial class MainForm : Form
                                       Text = ex.Message
                                       , Caption = "Exception encountered"
                                       , Heading = "Exception!"
-                                      , Buttons = new TaskDialogButtonCollection() { TaskDialogButton.OK }
+                                      , Buttons = [TaskDialogButton.OK]
                                       , AllowCancel = false
                                       , AllowMinimize = true
                                       , Icon = TaskDialogIcon.Error

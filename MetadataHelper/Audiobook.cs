@@ -39,7 +39,14 @@ public sealed partial class Audiobook
         : this(filename, json, title, author, series, null, null)
     { }
 
-    public Audiobook(string filename, string? json, string title, string author, string? series, string? bookNumber, ICollection<AudiobookChapter>? chapters)
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0290:Use primary constructor", Justification = "I dislike primary constructors.")]
+    public Audiobook(string filename
+                     , string? json
+                     , string title
+                     , string author
+                     , string? series
+                     , string? bookNumber
+                     , ICollection<AudiobookChapter>? chapters)
     {
         Filename = filename;
         JSONRepresentation = json;
@@ -106,15 +113,15 @@ public sealed partial class Audiobook
                                                             // the name as the series keep the
                                                             // title as is.
 
-            finalPath = Path.Combine([basePath, SafeAuthor, SafeSeries, bookDir]);
+            finalPath = Path.Join([basePath, SafeAuthor, SafeSeries, bookDir]);
         }
         else
         {
-            finalPath = Path.Combine([basePath, Author, SafeTitle]);
+            finalPath = Path.Join([basePath, Author, SafeTitle]);
         }
 
         Directory.CreateDirectory(finalPath);
-        return Path.Combine(finalPath, Path.GetFileName(Filename));
+        return Path.Join(finalPath, Path.GetFileName(Filename));
     }
 
     [GeneratedRegex("[<,>,:,\",/,\\,|,?,*]")]

@@ -2,7 +2,9 @@
 using CommandLine.Text;
 using System.Text;
 
-namespace Audiobook_Renamer_CLI;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace AudiobookRenamerCLI;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 public class Options(bool verbose
                      , bool quiet
@@ -38,11 +40,11 @@ public class Options(bool verbose
 
     [Usage]
     public static IEnumerable<Example> Examples
-        => new List<Example>()
-        {
+        =>
+        [
             new("Show max output", new Options(true, false, @"C:\InDir\", @"C:\OutDir\", 5))
             , new("Quiet as a mouse", new Options(false,true, @"C:\InDir\", @"C:\OutDir\", 5))
-        };
+        ];
 
     /// <inheritdoc cref="object.ToString"/>
     /// <inheritdoc cref="StringBuilder.AppendLine()" path="/exception"/>

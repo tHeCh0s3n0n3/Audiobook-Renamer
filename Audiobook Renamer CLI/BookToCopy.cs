@@ -1,6 +1,8 @@
 ﻿using ShellProgressBar;
 
-namespace Audiobook_Renamer_CLI;
+#pragma warning disable IDE0130 // Namespace does not match folder structure
+namespace AudiobookRenamerCLI;
+#pragma warning restore IDE0130 // Namespace does not match folder structure
 
 public class BookToCopy(FileInfo sourceFilename
                         , FileInfo destinationFilename
