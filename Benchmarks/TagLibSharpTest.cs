@@ -20,7 +20,9 @@ public static class TagLibSharpTest
             TagLib.File tagFile = TagLib.File.Create(filename);
 
             title = tagFile.Tag.Title;
-            foreach (TagLib.Tag tagContainer in (tagFile.Tag as TagLib.NonContainer.Tag)?.Tags ?? [])
+            foreach (TagLib.Tag tagContainer in (tagFile.Tag as TagLib.NonContainer.Tag)?.Tags
+                                                                                        ?.Where(tc => tc.TagTypes == TagLib.TagTypes.Id3v2)
+                                                ?? [])
             {
                 if (tagContainer.TagTypes == TagLib.TagTypes.Id3v2)
                 {
