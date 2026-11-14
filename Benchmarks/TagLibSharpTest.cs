@@ -24,59 +24,56 @@ public static class TagLibSharpTest
                                                                                         ?.Where(tc => tc.TagTypes == TagLib.TagTypes.Id3v2)
                                                 ?? [])
             {
-                if (tagContainer.TagTypes == TagLib.TagTypes.Id3v2)
+                if (tagContainer is not TagLib.Id3v2.Tag id3Tags)
                 {
-                    if (tagContainer is not TagLib.Id3v2.Tag id3Tags)
+                    continue;
+                }
+                foreach (var id3Tag in id3Tags)
+                {
+                    var utif = id3Tag as TagLib.Id3v2.UserTextInformationFrame;
+                    if (utif is not null)
                     {
-                        continue;
-                    }
-                    foreach (var id3Tag in id3Tags)
-                    {
-                        var utif = id3Tag as TagLib.Id3v2.UserTextInformationFrame;
-                        if (utif is not null)
+                        string? desc = utif.Description;
+                        string[] tift = utif.Text;
+                        string? tiftStr = string.Join(", ", tift);
+                        if (desc is not null
+                            && tiftStr is not null)
                         {
-                            string? desc = utif.Description;
-                            string[] tift = utif.Text;
-                            string? tiftStr = string.Join(", ", tift);
-                            if (desc is not null
-                                && tiftStr is not null)
+                            if (desc.ToUpper().Equals("AUTHOR"))
                             {
-                                if (desc.ToUpper().Equals("AUTHOR"))
+                                author = tiftStr;
+                            }
+                            if (desc.ToUpper().Equals("SERIES"))
+                            {
+                                seriesName = tiftStr;
+                            }
+                            if (desc.ToUpper().Equals("SERIES-PART"))
+                            {
+                                bookNumber = tiftStr;
+                            }
+                            if (desc.ToUpper().Equals("JSON64"))
+                            {
+                                int encoding = utif.TextEncoding switch
                                 {
-                                    author = tiftStr;
-                                }
-                                if (desc.ToUpper().Equals("SERIES"))
-                                {
-                                    seriesName = tiftStr;
-                                }
-                                if (desc.ToUpper().Equals("SERIES-PART"))
-                                {
-                                    bookNumber = tiftStr;
-                                }
-                                if (desc.ToUpper().Equals("JSON64"))
-                                {
-                                    int encoding = utif.TextEncoding switch
-                                    {
-                                        TagLib.StringType.Latin1 => 28591,
-                                        TagLib.StringType.UTF16 => 1200,
-                                        TagLib.StringType.UTF16LE => 1200,
-                                        TagLib.StringType.UTF16BE => 1201,
-                                        TagLib.StringType.UTF8 => 65001,
-                                        _ => 65001
-                                    };
-                                    utfJson = Encoding.GetEncoding(encoding)
-                                                      .GetString(Convert.FromBase64String(tiftStr));
-                                }
+                                    TagLib.StringType.Latin1 => 28591,
+                                    TagLib.StringType.UTF16 => 1200,
+                                    TagLib.StringType.UTF16LE => 1200,
+                                    TagLib.StringType.UTF16BE => 1201,
+                                    TagLib.StringType.UTF8 => 65001,
+                                    _ => 65001
+                                };
+                                utfJson = Encoding.GetEncoding(encoding)
+                                                    .GetString(Convert.FromBase64String(tiftStr));
                             }
                         }
+                    }
 
-                        if (id3Tag is TagLib.Id3v2.ChapterFrame cif)
-                        {
-                            chapters.Add(new((cif.SubFrames.FirstOrDefault() as TextInformationFrame)?.Text.FirstOrDefault() ?? string.Empty
-                                             , TimeSpan.FromMilliseconds(cif.StartMilliseconds)
-                                             , TimeSpan.FromMilliseconds(cif.EndMilliseconds)
-                                             , TimeSpan.FromMilliseconds(cif.EndMilliseconds - cif.StartMilliseconds)));
-                        }
+                    if (id3Tag is TagLib.Id3v2.ChapterFrame cif)
+                    {
+                        chapters.Add(new((cif.SubFrames.FirstOrDefault() as TextInformationFrame)?.Text.FirstOrDefault() ?? string.Empty
+                                            , TimeSpan.FromMilliseconds(cif.StartMilliseconds)
+                                            , TimeSpan.FromMilliseconds(cif.EndMilliseconds)
+                                            , TimeSpan.FromMilliseconds(cif.EndMilliseconds - cif.StartMilliseconds)));
                     }
                 }
             }
