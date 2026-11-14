@@ -13,11 +13,11 @@ public partial class FrmChapterListing : Form
         audiobookChapters = chapters;
 
         dgvList.DataSource = audiobookChapters;
-        dgvList.Columns["Start"].DefaultCellStyle.Format = @"hh\:mm\:ss\.fff";
-        dgvList.Columns["End"].DefaultCellStyle.Format = @"hh\:mm\:ss\.fff";
-        dgvList.Columns["Duration"].DefaultCellStyle.Format = @"hh\:mm\:ss\.fff";
+        dgvList.Columns["Start"]?.DefaultCellStyle.Format = @"hh\:mm\:ss\.fff";
+        dgvList.Columns["End"]?.DefaultCellStyle.Format = @"hh\:mm\:ss\.fff";
+        dgvList.Columns["Duration"]?.DefaultCellStyle.Format = @"hh\:mm\:ss\.fff";
 
-        dgvList.Columns["Title"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+        dgvList.Columns["Title"]?.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
     }
 
     private void BtnClose_Click(object sender, EventArgs e)
